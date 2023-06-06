@@ -5,11 +5,16 @@ import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import { AnyExceptionFilter } from './any-exception/any-exception.filter';
 import { AllResponseInterceptor } from './all-response/all-response.interceptor';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 
 // https://docs.nestjs.com/openapi/introduction
 // https://docs.nestjs.com/recipes/prisma
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const apolloClient = new ApolloClient({
+    uri: 'http://example.com/graphql',
+    cache: new InMemoryCache(),
+  });
 
   app.useGlobalInterceptors(new AllResponseInterceptor()); //使用自定义的全局拦截器，对数据做处理
   app.useGlobalPipes(new ValidationPipe());
